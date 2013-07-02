@@ -6,8 +6,9 @@
 #
 '''
 Display Different TZ beside the local one in buffer messages.
+Usage:
 
-Usage, just load the script then:
+Just load the script then:
 
 /set plugins.var.python.message_dual_tz.timeformat = %H:%M:%S %Z
 /set plugins.var.python.message_dual_tz.timezone = US/Pacific
@@ -47,11 +48,16 @@ def message_dual_tz_config_cb(*kwargs):
     )
 
 def message_dual_prnt_hook(data, modifier, modifier_data, line):
-    return "%s [%s]\t%s" % (
-        line.split('\t')[0],
-        get_time(),
-        ''.join(line.split('\t')[1:])
-    )
+    logtype = modifier_data.split(';')[-1]
+    plugin = modifier_data.split(';')[0]
+    if plugin != 'core' and not logtype.startswith('logger_backlog'):
+        return "%s [%s]\t%s" % (
+            line.split('\t')[0],
+            get_time(),
+            ''.join(line.split('\t')[1:])
+        )
+    else:
+        return "%s" % line.strip()
 
 if w.register(SCRIPT_NAME, SCRIPT_AUTHOR, SCRIPT_VERSION, SCRIPT_LICENSE,
                     SCRIPT_DESC, '', ''):
