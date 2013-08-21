@@ -2,22 +2,9 @@
 #
 # Angelo "pallotron" Failla <pallotron@freaknet.org>
 # License: GPL3
-# Source: https://github.com/pallotron/weechat-scripts/message_dual_tz.py
 #
 '''
 Display Different TZ beside the local one in buffer messages.
-Usage:
-
-Just load the script then:
-
-/set plugins.var.python.message_dual_tz.timeformat = %H:%M:%S %Z
-/set plugins.var.python.message_dual_tz.timezone = US/Pacific
-
-timeformat is a string in strftime format as explained in
-http://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
-
-timezone is the timezone string as you can find in /usr/share/zoneinfo/
-(on a OSX and Linux box)
 '''
 import weechat as w
 import pytz
@@ -48,7 +35,7 @@ def message_dual_tz_config_cb(*kwargs):
     )
 
 def message_dual_prnt_hook(data, modifier, modifier_data, line):
-    logtype = modifier_data.split(';')[-1]
+    logtype = modifier_data.split(';')[-1].split(',')[-1]
     plugin = modifier_data.split(';')[0]
     if plugin != 'core' and not logtype.startswith('logger_backlog'):
         return "%s [%s]\t%s" % (
